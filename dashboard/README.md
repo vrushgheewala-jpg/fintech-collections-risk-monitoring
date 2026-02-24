@@ -3,4 +3,4 @@
 This folder contains dashboard assets.
 
 ## Files
-- dashboard_screenshot.png → preview of the operations monitoring dashboard
+- dashboard_screenshot.jpeg → preview of the operations monitoring dashboard
