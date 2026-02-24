@@ -20,7 +20,7 @@ Synthetic Data → BigQuery Tables → Risk Logic Views → Operations Dashboard
 - Interactive monitoring dashboard
 
 ## Dashboard Preview
-![Dashboard](dashboard/dashboard_screenshot.png)
+![Dashboard](dashboard/dashboard_screenshot.jpg)
 
 ## Business Impact
 Helps operations teams identify high-risk customers early and prioritize collections efforts efficiently.
