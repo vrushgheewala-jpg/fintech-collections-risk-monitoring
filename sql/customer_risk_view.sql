@@ -6,20 +6,20 @@ SELECT
     CASE
         WHEN p.payment_date IS NULL
             THEN DATE_DIFF(CURRENT_DATE(), i.due_date, DAY)
-        ELSE DATE_DIFF(p.payment_date, i.due_date, DAY)
+        ELSE DATE_DIFF(DATE(p.payment_date), i.due_date, DAY)
     END AS days_late,
 
     CASE
-        WHEN p.payment_date IS NULL AND DATE_DIFF(CURRENT_DATE(), i.due_date, DAY) > 30
-            THEN 1
+        WHEN p.payment_date IS NULL THEN 1
         ELSE 0
-    END AS high_risk_flag,
+    END AS unpaid_flag,
 
     CASE
         WHEN p.payment_date IS NULL
-            THEN 1
+             AND DATE_DIFF(CURRENT_DATE(), i.due_date, DAY) > 30
+        THEN 1
         ELSE 0
-    END AS unpaid_flag
+    END AS high_risk_flag
 
 FROM `my-first-project-485906.fintech_project.invoices` i
 LEFT JOIN `my-first-project-485906.fintech_project.payments` p
@@ -31,8 +31,20 @@ SELECT
     customer_id,
     COUNT(*) AS total_invoices,
     SUM(unpaid_flag) AS unpaid_invoices,
-    AVG(days_late) AS avg_days_late,
+    ROUND(AVG(days_late),2) AS avg_days_late,
     SUM(high_risk_flag) AS high_risk_invoices,
-    (SUM(unpaid_flag)*2 + SUM(high_risk_flag)*3 + AVG(days_late)/10) AS risk_score
+
+    ROUND(
+        (SUM(unpaid_flag)*2)
+        + (SUM(high_risk_flag)*3)
+        + (AVG(days_late)/10)
+    ,2) AS risk_score,
+
+    CASE
+        WHEN AVG(days_late) > 20 THEN "WORSENING"
+        WHEN AVG(days_late) > 5 THEN "WATCH"
+        ELSE "STABLE"
+    END AS risk_trend
+
 FROM invoice_risk
 GROUP BY customer_id
