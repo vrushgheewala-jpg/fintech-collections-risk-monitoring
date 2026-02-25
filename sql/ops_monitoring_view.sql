@@ -3,9 +3,10 @@ SELECT
     c.company_name,
     r.total_invoices,
     r.unpaid_invoices,
-    ROUND(r.avg_days_late,2) AS avg_days_late,
+    r.avg_days_late,
     r.high_risk_invoices,
-    ROUND(r.risk_score,2) AS risk_score,
+    r.risk_score,
+    r.risk_trend,
 
     CASE
         WHEN r.risk_score > 50 THEN "URGENT"
